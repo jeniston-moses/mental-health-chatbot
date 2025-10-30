@@ -5,7 +5,7 @@
   "description": "AI Support Bot - Frontend Only =============================",
   "main": "script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"No tests specified\" && exit 0",
     "start": "node server.js"
   },
   "keywords": [],
