@@ -1,25 +1,25 @@
 import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Use Azure's dynamic port
+// ✅ Setup static file serving (for your index.html and script.js)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use(express.static(__dirname));
+
+// ✅ Gemini API details
 const PORT = process.env.PORT || 3000;
-
-// 🔑 Gemini API key
 const GEMINI_API_KEY = "AIzaSyAIoPF4uTyHMOnf5rCg-j61B3riY229vhA";
-
-// ✅ Model and API endpoint
 const MODEL = "gemini-2.0-flash";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
-app.get("/", (req, res) => {
-  res.send("🚀 Mental Health Chatbot is running!");
-});
-
+// ✅ Chat endpoint
 app.post("/chat", async (req, res) => {
   try {
     const userText = req.body.message || "";
@@ -33,7 +33,7 @@ app.post("/chat", async (req, res) => {
     });
 
     const data = await response.json();
-    console.log("📦 Gemini API response:", JSON.stringify(data, null, 2));
+    console.log("📦 Full Gemini API response:\n", JSON.stringify(data, null, 2));
 
     const reply =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
@@ -46,6 +46,11 @@ app.post("/chat", async (req, res) => {
   }
 });
 
+// ✅ Default route (serves index.html)
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`✅ Server running at http://localhost:${PORT}`);
 });
