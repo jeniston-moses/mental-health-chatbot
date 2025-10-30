@@ -30,24 +30,27 @@ function speak(text) {
   if (isMuted || !window.speechSynthesis) return;
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = "en-US";
+  window.speechSynthesis.cancel(); // stop any ongoing speech
   window.speechSynthesis.speak(utter);
 }
 
-// === Chat to backend ===
+// === Backend Call ===
 async function callServer(userText) {
+  const apiURL = "https://mental-health-chatbot-embqgbfvbze8a0cu.azurewebsites.net/api/chat";
+
   try {
-    const res = await fetch("https://mental-health-chatbot-embqgbfvbze8a0cu.azurewebsites.net/chat", {
+    const res = await fetch(apiURL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: userText })
+      body: JSON.stringify({ message: userText }),
     });
 
-    if (!res.ok) throw new Error("Server returned " + res.status);
+    if (!res.ok) throw new Error(`Server returned ${res.status}`);
     const data = await res.json();
     return data.reply || "No reply.";
   } catch (err) {
-    console.error("Fetch error:", err);
-    throw err;
+    console.error("❌ Fetch error:", err);
+    throw new Error("Network or server issue.");
   }
 }
 
@@ -59,6 +62,7 @@ async function sendMessage() {
   inputBox.value = "";
 
   const typingDiv = showTyping();
+
   try {
     const reply = cleanText(await callServer(text));
     typingDiv.remove();
@@ -66,7 +70,7 @@ async function sendMessage() {
     speak(reply);
   } catch (e) {
     typingDiv.remove();
-    appendMessage("bot", "⚠️ API error (check console).");
+    appendMessage("bot", "⚠️ Unable to connect to server. Please try again later.");
   }
 }
 
@@ -82,7 +86,7 @@ muteBtn.addEventListener("click", () => {
   if (isMuted) window.speechSynthesis.cancel();
 });
 
-// 🎤 Voice Input
+// === Voice Input ===
 let recognition = null;
 if (window.SpeechRecognition || window.webkitSpeechRecognition) {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
