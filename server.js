@@ -6,14 +6,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = 3000;
+// ✅ Use Azure's dynamic port
+const PORT = process.env.PORT || 3000;
 
-// 🔑 Your Gemini API key
+// 🔑 Gemini API key
 const GEMINI_API_KEY = "AIzaSyAIoPF4uTyHMOnf5rCg-j61B3riY229vhA";
 
-// ✅ Use the correct model and endpoint
+// ✅ Model and API endpoint
 const MODEL = "gemini-2.0-flash";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+
+app.get("/", (req, res) => {
+  res.send("🚀 Mental Health Chatbot is running!");
+});
 
 app.post("/chat", async (req, res) => {
   try {
@@ -28,7 +33,7 @@ app.post("/chat", async (req, res) => {
     });
 
     const data = await response.json();
-    console.log("📦 Full Gemini API response:\n", JSON.stringify(data, null, 2));
+    console.log("📦 Gemini API response:", JSON.stringify(data, null, 2));
 
     const reply =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
@@ -41,6 +46,6 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-app.listen(PORT, () =>
-  console.log(`✅ Server running at http://localhost:${PORT}`)
-);
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
