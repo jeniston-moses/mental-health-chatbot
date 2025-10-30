@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mental Health Support Bot</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    header h1 {
+      font-size: 1.6em;
+      margin: 0;
+      color: #a7f3d0;
+      letter-spacing: 0.5px;
+    }
+
+    #chat {
+      width: 90%;
+      max-width: 500px;
+      height: 70vh;
+      overflow-y: auto;
+      border: 1px solid #444;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 20px;
+      background: rgba(34, 34, 34, 0.85);
+      display: flex;
+      flex-direction: column; /* ✅ normal downward scroll */
+      scroll-behavior: smooth;
+    }
+
+    .msg {
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 8px;
+      line-height: 1.4em;
+      word-wrap: break-word;
+    }
+
+    .msg.user {
+      background: #4f46e5;
+      align-self: flex-end;
+    }
+
+    .msg.bot {
+      background: #374151;
+      align-self: flex-start;
+    }
+
+    .typing {
+      display: flex;
+      gap: 4px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      background: #a7f3d0;
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-6px); }
+    }
+
+    #controls {
+      margin-top: 10px;
+      display: flex;
+      gap: 5px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+      background: #222;
+      color: white;
+    }
+
+    button {
+      padding: 8px 10px;
+      border: none;
+      border-radius: 5px;
+      background: #4f46e5;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover { background: #4338ca; }
+
+    label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://cdn-icons-png.flaticon.com/512/4185/4185642.png" alt="Mental Health Logo">
+    <h1>Mental Health Support Bot</h1>
+  </header>
+
+  <div id="chat"></div>
+
+  <div id="controls">
+    <input id="inputBox" type="text" placeholder="Type how you feel..." />
+    <button id="micBtn">🎤</button>
+    <button id="muteBtn">🔊</button>
+    <button id="sendBtn">Send</button>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
