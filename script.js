@@ -23,7 +23,7 @@ function showTyping() {
 }
 
 function cleanText(text) {
-  return text.replace(/\*/g, ""); // removes *
+  return text.replace(/\*/g, "");
 }
 
 function speak(text) {
@@ -35,13 +35,20 @@ function speak(text) {
 
 // === Chat to backend ===
 async function callServer(userText) {
-  const res = await fetch("http://localhost:3000/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: userText })
-  });
-  const data = await res.json();
-  return data.reply || "No reply.";
+  try {
+    const res = await fetch("https://mental-health-chatbot-embqgbfvbze8a0cu.azurewebsites.net/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: userText })
+    });
+
+    if (!res.ok) throw new Error("Server returned " + res.status);
+    const data = await res.json();
+    return data.reply || "No reply.";
+  } catch (err) {
+    console.error("Fetch error:", err);
+    throw err;
+  }
 }
 
 async function sendMessage() {
