@@ -36,7 +36,8 @@ function speak(text) {
 
 // === Backend Call ===
 async function callServer(userText) {
-  const apiURL = "https://mental-health-chatbot-embqgbfvbze8a0cu.azurewebsites.net/api/chat";
+  // ✅ Correct backend URL
+  const apiURL = "https://mental-health-chatbot-embqgbfvbze8a0cu.canadacentral-01.azurewebsites.net/chat";
 
   try {
     const res = await fetch(apiURL, {
@@ -96,11 +97,17 @@ if (window.SpeechRecognition || window.webkitSpeechRecognition) {
     inputBox.value = e.results[0][0].transcript;
     sendMessage();
   };
-  recognition.onend = () => { micBtn.textContent = "🎤"; };
-} else micBtn.style.display = "none";
+  recognition.onend = () => {
+    micBtn.textContent = "🎤";
+    micBtn.dataset.listening = "0";
+  };
+} else {
+  micBtn.style.display = "none";
+}
 
 micBtn.addEventListener("click", () => {
   if (!recognition) return;
+
   if (micBtn.dataset.listening === "1") {
     recognition.stop();
     micBtn.dataset.listening = "0";
